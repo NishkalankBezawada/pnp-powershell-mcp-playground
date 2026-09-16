@@ -1,0 +1,11 @@
+# Claude Code local state
+.claude/
+
+# PowerShell / PnP transcripts and output
+*.log
+transcript*.txt
+
+# OS cruft
+Thumbs.db
+desktop.ini
+.DS_Store

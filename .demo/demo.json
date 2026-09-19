@@ -1,0 +1,168 @@
+{
+  "$schema": "https://demotime.show/demo-time.schema.json",
+  "title": "Talking to Microsoft 365 in Plain English — the PnP PowerShell MCP Server",
+  "description": "A 10-12 minute live demo: natural language to PnP PowerShell against a real tenant, from a read-only governance report through to provisioning three interrelated SharePoint lists from JSON definitions.",
+  "version": 2,
+  "demos": [
+    {
+      "title": "1. Title",
+      "description": "Opening slide.",
+      "steps": [
+        {
+          "action": "openSlide",
+          "path": ".demo/slides/00-title.md"
+        }
+      ],
+      "notes": {
+        "path": ".demo/notes/00-title-notes.md"
+      }
+    },
+    {
+      "title": "2. What is the PnP PowerShell MCP Server",
+      "description": "14 tools in three families, plus MCP resources.",
+      "steps": [
+        {
+          "action": "openSlide",
+          "path": ".demo/slides/01-what-is-it.md"
+        }
+      ],
+      "notes": {
+        "path": ".demo/notes/01-what-is-it-notes.md"
+      }
+    },
+    {
+      "title": "3. The Wiring - .vscode/mcp.json",
+      "description": "Highlight the entire MCP server registration. Fifteen lines.",
+      "steps": [
+        {
+          "action": "highlight",
+          "path": ".vscode/mcp.json",
+          "position": "1:16",
+          "zoom": 3,
+          "highlightWholeLine": true
+        }
+      ],
+      "notes": {
+        "path": ".demo/notes/02-wiring-notes.md"
+      }
+    },
+    {
+      "title": "4. Pre-Flight - Check, Connect, Prove, Disconnect",
+      "description": "Environment check, then a real round trip to the admin site to prove the certificate authenticates, then disconnect so beat 5 starts clean.",
+      "steps": [
+        {
+          "action": "agentCopilotChat",
+          "message": "Using the PnP PowerShell MCP server, run a pre-flight check in three steps. Report back after each step.\n\nSTEP 1. Check the environment: is pwsh available, is the PnP.PowerShell module installed and current enough, is this session connected, and if so as which account and URL?\n\nSTEP 2. If the session is not connected, prove that it can connect. Connect to the tenant admin site, then run Get-PnPWeb and show me the Url and Title that come back. That is a real round trip to the service rather than a local state check.\n\nSTEP 3. Now disconnect again so the next demo starts from a clean slate. Run Disconnect-PnPOnline, then check the session status once more and confirm it reports not connected. Leaving it disconnected is intentional, so do not reconnect."
+        }
+      ],
+      "notes": {
+        "path": ".demo/notes/03-where-am-i-notes.md"
+      }
+    },
+    {
+      "title": "5. Demo : Get Sites With No Owner",
+      "description": "Read-only tenant-wide governance report. Needs the tenant admin connection.",
+      "steps": [
+        {
+          "action": "agentCopilotChat",
+          "message": "Using the PnP PowerShell MCP server, connect to the tenant admin site, and find every site collection in this tenant that has no owner. Search for the right cmdlet first rather than assuming one. Show me the site URL, the template and the last modified date, and tell me how many there are in total. This step is read-only. Do not change anything."
+        }
+      ],
+      "notes": {
+        "path": ".demo/notes/04-demo-a-orphaned-sites-notes.md"
+      }
+    },
+    {
+      "title": "6. Bridge - Reading vs Writing",
+      "description": "The pivot into provisioning.",
+      "steps": [
+        {
+          "action": "openSlide",
+          "path": ".demo/slides/02-bridge.md"
+        }
+      ],
+      "notes": {
+        "path": ".demo/notes/05-bridge-notes.md"
+      }
+    },
+    {
+      "title": "7. The Input Contract - customers.json",
+      "description": "Highlight the fields block: Text, Taxonomy and Note columns, site-scoped with stable GUIDs.",
+      "steps": [
+        {
+          "action": "highlight",
+          "path": "Create-lists-demo/listDefinitions/customers.json",
+          "position": "17:62",
+          "zoom": 3,
+          "highlightWholeLine": true
+        }
+      ],
+      "notes": {
+        "path": ".demo/notes/06-contract-notes.md"
+      }
+    },
+    {
+      "title": "8. Demo - Provision Customers and Contacts",
+      "description": "First writes of the talk. The destructive-confirmation gate fires here.",
+      "steps": [
+        {
+          "action": "agentCopilotChat",
+          "message": "Using the PnP PowerShell MCP server, connect to the demo site and provision two SharePoint lists from the JSON definitions in Create-lists-demo/listDefinitions: first customers.json, then contacts.json. Create every list, site column, list column and view exactly as the JSON declares. Respect the dependency order. Report what you created."
+        }
+      ],
+      "notes": {
+        "path": ".demo/notes/07-demo-b-provision-notes.md"
+      }
+    },
+    {
+      "title": "9. Demo - Products and the Cascading Lookup [DROPPABLE]",
+      "description": "The payoff: two independent lookups, and the agent explaining that SharePoint has no native cascading lookup. Skip this beat if past 9 minutes.",
+      "steps": [
+        {
+          "action": "highlight",
+          "path": "Create-lists-demo/listDefinitions/products.json",
+          "position": "49:72",
+          "zoom": 3,
+          "highlightWholeLine": true
+        },
+        {
+          "action": "agentCopilotChat",
+          "message": "Now provision products.json from Create-lists-demo/listDefinitions to the same site. It has two lookups: Customer and Contact. I want the Contact dropdown to only show contacts belonging to the Customer that was picked on that item, so picking a Customer filters the Contact choices. Set that up, and if SharePoint cannot do it at the list level then say so plainly and tell me what my actual options are."
+        }
+      ],
+      "notes": {
+        "path": ".demo/notes/08-demo-b-products-notes.md"
+      }
+    },
+    {
+      "title": "10. Recap and Links",
+      "description": "Five takeaways, links, thank you.",
+      "steps": [
+        {
+          "action": "openSlide",
+          "path": ".demo/slides/03-recap-links.md"
+        }
+      ],
+      "notes": {
+        "path": ".demo/notes/09-recap-notes.md"
+      }
+    },
+    {
+      "title": "RESET - Run between rehearsals",
+      "description": "Not part of the talk. Drops the three lists and the site columns so the demo can be run again.",
+      "steps": [
+        {
+          "action": "openTerminal",
+          "terminalId": "demo-reset"
+        },
+        {
+          "action": "executeTerminalCommand",
+          "command": "pwsh -File ./Create-lists-demo/scripts/Reset-Demo.ps1",
+          "insertTypingSpeed": 0,
+          "insertTypingMode": "character-by-character",
+          "terminalId": "demo-reset"
+        }
+      ]
+    }
+  ]
+}

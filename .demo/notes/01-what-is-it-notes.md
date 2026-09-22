@@ -1,5 +1,8 @@
 # Speaker Notes: What is the PnP PowerShell MCP Server?
 
+> This beat is two slides in one file. Press the arrow key to get to "Two things
+> people miss". It was one slide originally and the content ran off the bottom.
+
 ## The part that matters most
 
 It does not authenticate for you. For an admin audience this is usually the most

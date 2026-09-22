@@ -1,6 +1,6 @@
 {
   "$schema": "https://demotime.show/demo-time.schema.json",
-  "title": "Talking to Microsoft 365 in Plain English — the PnP PowerShell MCP Server",
+  "title": "Talking to Microsoft 365 in Plain English - the PnP PowerShell MCP Server",
   "description": "A 10-12 minute live demo: natural language to PnP PowerShell against a real tenant, from a read-only governance report through to provisioning three interrelated SharePoint lists from JSON definitions.",
   "version": 2,
   "demos": [

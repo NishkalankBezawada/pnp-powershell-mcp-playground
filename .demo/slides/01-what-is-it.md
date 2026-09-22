@@ -5,21 +5,33 @@ layout: default
 
 # What is the PnP PowerShell MCP Server?
 
-A **local stdio MCP server** that lets any MCP client drive PnP PowerShell.
-It does **not** authenticate for you — it reuses your `Connect-PnPOnline` session.
+A local stdio MCP server that lets any MCP client drive PnP PowerShell.
 
-## 14 tools, three families
+It does **not** authenticate for you. It reuses your `Connect-PnPOnline` session.
 
-| Family | Tools | What it answers |
+| Family | Example tool | What it answers |
 |---|---|---|
-| **Discover** | `pnp_find_command`, `pnp_get_command_docs`, `pnp_get_best_practices` | "Which cmdlet does this, and how do I call it?" |
-| **Execute** | `pnp_run_command`, `pnp_check_environment`, `pnp_session_status` | "Actually do it — and tell me where I'm signed in." |
-| **Community** | `pnp_search_script_samples`, `pnp_suggest_script` | "Has someone already solved this?" |
+| **Discover** | `pnp_find_command` | Which cmdlet does this? |
+| **Execute** | `pnp_run_command` | Do it, and tell me where I'm signed in |
+| **Community** | `pnp_suggest_script` | Has someone already solved this? |
 
-## Two things people miss
+14 tools in total.
 
-- **Sessions persist.** Connect once; every later call reuses the connection.
-- **It ships MCP _resources_, not just tools** — `pnp://best-practices`, `pnp://cmdlet/Get-PnPWeb`.
+---
+layout: default
+---
+
+# Two things people miss
+
+## Sessions persist
+
+Connect once. Every later call reuses that connection.
+
+## It ships MCP resources, not just tools
+
+`pnp://best-practices` · `pnp://cmdlet/Get-PnPWeb`
+
+So the agent can read the documentation, not only run the command.
 
 ---
 layout: section

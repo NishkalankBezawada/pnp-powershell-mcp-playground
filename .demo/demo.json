@@ -47,12 +47,25 @@
       }
     },
     {
+      "title": "Demo : Preflight prompt",
+      "description": "Prompting the user for a preflight check before running the main demo.",
+      "steps": [
+        {
+          "action": "openSlide",
+          "path": ".demo/slides/02-Prompt1.md"
+        }
+      ],
+      "notes": {
+        "path": ".demo/notes/01-what-is-it-notes.md"
+      }
+    },
+    {
       "title": "4. Pre-Flight - Check, Connect, Prove, Disconnect",
       "description": "Environment check, then a real round trip to the admin site to prove the certificate authenticates, then disconnect so beat 5 starts clean.",
       "steps": [
         {
           "action": "agentCopilotChat",
-          "message": "Using the PnP PowerShell MCP server, run a pre-flight check in three steps. Report back after each step.\n\nSTEP 1. Check the environment: is pwsh available, is the PnP.PowerShell module installed and current enough, is this session connected, and if so as which account and URL?\n\nSTEP 2. If the session is not connected, prove that it can connect. Connect to the tenant admin site, then run Get-PnPWeb and show me the Url and Title that come back. That is a real round trip to the service rather than a local state check.\n\nSTEP 3. Now disconnect again so the next demo starts from a clean slate. Run Disconnect-PnPOnline, then check the session status once more and confirm it reports not connected. Leaving it disconnected is intentional, so do not reconnect."
+          "message": "Using the PnP PowerShell MCP server, run a pre-flight check in three steps. Report back after each step.\n\nSTEP 1. Check the environment: is pwsh available, is the PnP.PowerShell module installed and current enough, is this session connected, and if so as which account and URL?\n\nSTEP 2. If the session is not connected, prove that it can connect. Connect to the tenant admin site, then run Get-PnPWeb and show me the Url and Title that come back. That is a real round trip to the service rather than a local state check.\n\nSTEP 3. Now disconnect again so the next demo starts from a clean slate. Run Disconnect-PnPOnline, then check the session status once more and confirm it reports not connected. Leaving it disconnected is intentional, so do not reconnect. Note Connection parameters are in Create-lists-demo/environment/.env file."
         }
       ],
       "notes": {
@@ -66,6 +79,19 @@
         {
           "action": "agentCopilotChat",
           "message": "Using the PnP PowerShell MCP server, connect to the tenant admin site, and find every site collection in this tenant that has no owner. Search for the right cmdlet first rather than assuming one. Show me the site URL, the template and the last modified date, and tell me how many there are in total. This step is read-only. Do not change anything."
+        }
+      ],
+      "notes": {
+        "path": ".demo/notes/04-demo-a-orphaned-sites-notes.md"
+      }
+    },
+    {
+      "title": "5. Demo : List all the external users in the tenant",
+      "description": "Read-only tenant-wide governance report. Needs the tenant admin connection.",
+      "steps": [
+        {
+          "action": "agentCopilotChat",
+          "message": "Using the PnP PowerShell MCP server, connect to the tenant admin site, find and list all the external users in the tenant. Search for the right cmdlet first rather than assuming one. Show me the user principal name, display name, and the date they were invited, and tell me how many there are in total. This step is read-only. Do not change anything."
         }
       ],
       "notes": {

@@ -1,0 +1,98 @@
+{
+  "$schema": "./sharepoint-list.schema.json",
+  "title": "Products",
+  "url": "Products",
+  "templateType": 100,
+  "removeExisting": false,
+  "breakRoleInheritance": false,
+  "settings": {
+    "description": "Products sold to a customer, with the responsible contact person. Requires the Customers and Contacts lists to exist first.",
+    "onQuickLaunch": true,
+    "enableContentTypes": false,
+    "enableVersioning": true,
+    "majorVersionLimit": 50,
+    "enableAttachments": false
+  },
+  "contentTypes": [],
+  "fields": [
+    {
+      "displayName": "Product ID",
+      "internalName": "ProductID",
+      "type": "Taxonomy",
+      "scope": "site",
+      "id": "ff38a93c-56d4-49f7-853a-c4e6e049758c",
+      "group": "PnP Playground Columns",
+      "description": "Catalogue identifier of the product. Bound to the managed metadata term set 'Product Identifiers'.",
+      "required": true,
+      "addToDefaultView": true,
+      "termGroup": "PnP Playground",
+      "termSetName": "Product Identifiers",
+      "openTermSet": false,
+      "defaultValue": ""
+    },
+    {
+      "displayName": "Product Name",
+      "internalName": "ProductName",
+      "type": "Taxonomy",
+      "scope": "site",
+      "id": "1776b16e-2cc0-4e7e-98f3-e282e51a2631",
+      "group": "PnP Playground Columns",
+      "description": "Marketing name of the product. Bound to the managed metadata term set 'Product Names'.",
+      "required": true,
+      "addToDefaultView": true,
+      "termGroup": "PnP Playground",
+      "termSetName": "Product Names",
+      "openTermSet": false,
+      "defaultValue": ""
+    },
+    {
+      "displayName": "Customer",
+      "internalName": "CustomerLookup",
+      "type": "Lookup",
+      "scope": "list",
+      "description": "The customer this product is sold to.",
+      "required": true,
+      "addToDefaultView": true,
+      "indexed": true,
+      "lookupList": "Customers",
+      "lookupField": "CustomerName",
+      "defaultValue": ""
+    },
+    {
+      "displayName": "Contact",
+      "internalName": "ContactLookup",
+      "type": "Lookup",
+      "scope": "list",
+      "description": "The contact person responsible for this product. NOT filtered by the selected Customer - SharePoint has no native cascading lookup. See notes.md.",
+      "required": false,
+      "addToDefaultView": true,
+      "indexed": true,
+      "lookupList": "Contacts",
+      "lookupField": "ContactPersonName",
+      "defaultValue": ""
+    }
+  ],
+  "views": [
+    {
+      "name": "All Products",
+      "fields": ["ProductID", "ProductName", "CustomerLookup", "ContactLookup"],
+      "query": "<OrderBy><FieldRef Name='ProductID' Ascending='TRUE' /></OrderBy>",
+      "rowLimit": 50,
+      "paged": true,
+      "default": true,
+      "viewType": "Html"
+    },
+    {
+      "name": "Products by Customer",
+      "fields": ["CustomerLookup", "ContactLookup", "ProductName", "ProductID"],
+      "query": "<OrderBy><FieldRef Name='CustomerLookup' Ascending='TRUE' /><FieldRef Name='ProductName' Ascending='TRUE' /></OrderBy>",
+      "rowLimit": 50,
+      "paged": true,
+      "default": false,
+      "viewType": "Html",
+      "aggregations": {
+        "ProductID": "Count"
+      }
+    }
+  ]
+}

@@ -1,0 +1,86 @@
+{
+  "$schema": "https://demotime.show/demo-time.schema.json",
+  "title": "Introduction to PnP PowerShell MCP Server",
+  "description": "Copilot, Microsoft 365 & Power Platform community call, 22 October 2026. Recorded demo, played from the slides: six plain-English prompts against a real tenant, from the pre-flight check to a tenant governance report exported to CSV. Every prompt is read-only against the tenant.",
+  "version": 3,
+  "scenes": [
+    {
+      "title": "1. Pre-flight - connect and show the connection status",
+      "description": "Environment check, connect to the tenant admin site, prove it with a real round trip, then report the connection status. Stays connected for the rest of the demo.",
+      "moves": [
+        {
+          "action": "agentCopilotChat",
+          "message": "Using the PnP PowerShell MCP server, run a pre-flight check in three steps and report back after each step.\n\nSTEP 1. Check the environment: is pwsh available, is the PnP.PowerShell module installed and current enough, and is this session already connected? If it is, as which account and to which URL?\n\nSTEP 2. If the session is not connected, connect to the tenant admin site. The connection parameters are in environment/.env in this workspace and use certificate authentication. Do not print the client ID, tenant ID or certificate thumbprint in your answer.\n\nSTEP 3. Prove the connection with a real round trip to the service: run Get-PnPWeb and show me the Url and Title that come back. Then give me the connection status as a short summary: the URL, the connection method and the tenant. Stay connected, because the next prompts reuse this session."
+        }
+      ],
+      "notes": {
+        "path": ".demo/notes/01-preflight-notes.md"
+      }
+    },
+    {
+      "title": "2. List all the external users in the tenant",
+      "description": "Read-only tenant-wide report. Reuses the admin connection from the pre-flight.",
+      "moves": [
+        {
+          "action": "agentCopilotChat",
+          "message": "Using the PnP PowerShell MCP server and the tenant admin connection from the pre-flight, find and list all the external users in the tenant. Search for the right cmdlet first rather than assuming one, and page through all of the results rather than stopping at the first page. Show me the login name, display name and the date they were invited, and tell me how many there are in total. This step is read-only. Do not change anything."
+        }
+      ],
+      "notes": {
+        "path": ".demo/notes/02-external-users-notes.md"
+      }
+    },
+    {
+      "title": "3. Export the external users to CSV",
+      "description": "Writes output/external-users.csv locally. Nothing changes in the tenant.",
+      "moves": [
+        {
+          "action": "agentCopilotChat",
+          "message": "Now export all of those external users to a CSV file at output/external-users.csv in this workspace. Reuse the results from the previous step if you still have them, otherwise fetch them again the same way. Include the columns you showed me, plus who invited them and the account they accepted as, where that is available. Write UTF-8 without a type information header and overwrite the file if it already exists. Then tell me the full path and how many rows you wrote. Nothing in the tenant should change."
+        }
+      ],
+      "notes": {
+        "path": ".demo/notes/03-export-external-users-notes.md"
+      }
+    },
+    {
+      "title": "4. Storage usage per site, exported to CSV",
+      "description": "Read-only tenant-wide report. Writes output/site-storage.csv locally.",
+      "moves": [
+        {
+          "action": "agentCopilotChat",
+          "message": "Using the same tenant admin connection, get the storage used by every site collection in the tenant. Search for the right cmdlet first rather than assuming one, and leave out OneDrive sites. For each site include the URL, title, template, storage used in MB, storage quota in MB and the percentage of the quota used. Export the full list, sorted by storage used with the largest first, to output/site-storage.csv in this workspace. Then show me the top 10 here, the total storage used across all sites, and the full path of the CSV. This step is read-only. Do not change anything in the tenant."
+        }
+      ],
+      "notes": {
+        "path": ".demo/notes/04-storage-notes.md"
+      }
+    },
+    {
+      "title": "5. Find sites with only one owner",
+      "description": "Read-only tenant-wide report. Group owners for group-connected sites, site collection admins for the rest.",
+      "moves": [
+        {
+          "action": "agentCopilotChat",
+          "message": "Find every site collection in the tenant that has exactly one owner, because a site with a single owner is a single point of failure. Count owners like this: for a site connected to a Microsoft 365 group, count the owners of that group; for every other site, count the site collection administrators. Search for the right cmdlets first rather than assuming them. Leave out OneDrive sites and system sites such as the search center and the app catalog. If a cmdlet needs a connection to the site itself, connect to that site with the same credentials and return to the tenant admin connection when you are done. Show me the URL, the title, whether the site is group-connected and who the single owner is, and tell me how many there are in total. This step is read-only. Do not change anything."
+        }
+      ],
+      "notes": {
+        "path": ".demo/notes/05-single-owner-notes.md"
+      }
+    },
+    {
+      "title": "6. Which sites have external sharing enabled?",
+      "description": "Read-only. Tenant-level sharing setting first, then every site that allows sharing outside the organisation.",
+      "moves": [
+        {
+          "action": "agentCopilotChat",
+          "message": "Which sites have external sharing enabled? First get the tenant-level sharing setting, because it caps what any single site can allow. Then list every site collection whose sharing setting is anything other than disabled, leaving out OneDrive sites. Group them by sharing level, from most to least open: anyone links, new and existing guests, existing guests only. Show the URL, title and sharing level for each site, and tell me how many sites are in each group. This step is read-only. Do not change anything."
+        }
+      ],
+      "notes": {
+        "path": ".demo/notes/06-external-sharing-notes.md"
+      }
+    }
+  ]
+}

@@ -41,7 +41,8 @@ Supporting pieces outside `.demo/`:
 
 ## Running it
 
-Open the repo in VS Code, open the Demo Time panel, and walk the beats in order.
+Open `teamsdagen-2026.code-workspace` in VS Code (not the repo root; Demo Time only
+loads `.demo/` from the workspace root), open the Demo Time panel, and walk the beats in order.
 Beat 9 is marked `[DROPPABLE]` — skip it if you are past nine minutes.
 
 The last entry, `RESET`, is not part of the talk. It runs `Reset-Demo.ps1` in a

@@ -1,0 +1,196 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://0.0.1/schemas/sharepoint-list.schema.json",
+  "title": "SharePoint List Definition",
+  "description": "Schema for provisioning SharePoint lists (fields, views, settings) via PowerShell.",
+  "type": "object",
+  "required": ["title", "contentTypes", "views", "fields"],
+  "additionalProperties": false,
+  "definitions": {
+    "fieldType": {
+      "enum": [
+        "Text",
+        "Note",
+        "Number",
+        "Currency",
+        "DateTime",
+        "Boolean",
+        "Choice",
+        "MultiChoice",
+        "Lookup",
+        "LookupMulti",
+        "User",
+        "UserMulti",
+        "URL",
+        "Calculated",
+        "Integer",
+        "Guid",
+        "Taxonomy",
+        "TaxonomyMulti"
+      ]
+    },
+    "field": {
+      "type": "object",
+      "required": ["displayName", "internalName", "type", "description", "defaultValue"],
+      "additionalProperties": false,
+      "properties": {
+        "displayName": { "type": "string", "minLength": 1 },
+        "internalName": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 32,
+          "pattern": "^[A-Za-z][A-Za-z0-9_]*$",
+          "description": "No spaces, starts with a letter. Keep <= 32 chars to avoid encoding issues."
+        },
+        "type": { "$ref": "#/definitions/fieldType" },
+        "scope": {
+          "enum": ["list", "site"],
+          "default": "list",
+          "description": "'list' = create directly on the list. 'site' = create as a site column first (reused if it already exists), then add it to the list."
+        },
+        "id": {
+          "type": "string",
+          "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$",
+          "description": "Optional field GUID. field keeps a stable ID across lists/runs."
+        },
+        "group": { "type": "string", "description": "Site columns only. Site column group (e.g. 'Custom Columns')." },
+        "description": { "type": "string" },
+        "required": { "type": "boolean", "default": false },
+        "addToDefaultView": { "type": "boolean", "default": false },
+        "enforceUniqueValues": { "type": "boolean", "default": false },
+        "indexed": { "type": "boolean", "default": false },
+        "maxLength": { "type": "integer", "minimum": 1, "maximum": 255, "description": "Text fields only." },
+        "richText": { "type": "boolean", "description": "Note fields only." },
+        "numberOfLines": { "type": "integer", "minimum": 1, "description": "Note fields only." },
+        "decimalPlaces": { "type": "integer", "minimum": 0, "maximum": 5, "description": "Number fields only." },
+        "minimumValue": { "type": "number", "description": "Number/Currency fields only." },
+        "maximumValue": { "type": "number", "description": "Number/Currency fields only." },
+        "showAsPercentage": { "type": "boolean", "description": "Number fields only." },
+        "currencyCode": { "type": "integer", "description": "Currency LCID, e.g. 1033 (USD), 1029 (CZK)." },
+        "dateFormat": { "enum": ["DateOnly", "DateTime"], "description": "DateTime fields only." },
+        "defaultValue": { "description": "String, number, or boolean; use '[today]' / '[me]' for dynamic values. leave it emptyString of no default required." },
+        "choices": {
+          "type": "array",
+          "items": { "type": "string", "minLength": 1 },
+          "minItems": 1,
+          "description": "Choice / MultiChoice fields only."
+        },
+        "choiceFormat": {
+          "enum": ["Dropdown", "RadioButtons", "Checkboxes"],
+          "description": "Choice fields only."
+        },
+        "fillInChoice": { "type": "boolean", "description": "Allow 'fill-in' values on Choice fields." },
+        "lookupList": { "type": "string", "description": "Target list title or URL. Lookup fields only." },
+        "lookupField": { "type": "string", "default": "Title", "description": "Lookup fields only." },
+        "formula": { "type": "string", "description": "Calculated fields only." },
+        "outputType": {
+          "enum": ["Text", "Number", "Currency", "DateTime", "Boolean"],
+          "description": "Calculated fields only."
+        },
+        "urlFormat": { "enum": ["Hyperlink", "Picture"], "description": "URL fields only." },
+        "allowMultipleValues": { "type": "boolean", "description": "User fields only (use 'TaxonomyMulti' type for multi-value taxonomy)." },
+        "selectionMode": { "enum": ["PeopleOnly", "PeopleAndGroups"], "description": "User fields only." },
+        "termGroup": { "type": "string", "description": "Taxonomy only. Term group name; omit to use the site-collection group." },
+        "termSetName": { "type": "string", "description": "Taxonomy only. Term set name (used to resolve the term set when termSetId is not given)." },
+        "termSetId": { "type": "string", "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$", "description": "Taxonomy only. Term set GUID. Preferred over termSetName when both are present." },
+        "termStoreId": { "type": "string", "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$", "description": "Taxonomy only. Term store (SspId) GUID. Omit to use the default term store." },
+        "anchorId": { "type": "string", "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$", "description": "Taxonomy only. Optional term GUID to anchor the field to a subtree of the term set." },
+        "openTermSet": { "type": "boolean", "default": false, "description": "Taxonomy only. Allow users to add new terms (open term set)." }
+      }
+    },
+    "view": {
+      "type": "object",
+      "required": ["name"],
+      "additionalProperties": false,
+      "properties": {
+        "name": { "type": "string", "minLength": 1 },
+        "fields": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "Internal field names shown in the view, in order."
+        },
+        "query": { "type": "string", "description": "CAML <Where>/<OrderBy> inner XML." },
+        "rowLimit": { "type": "integer", "minimum": 1, "default": 30 },
+        "paged": { "type": "boolean", "default": true },
+        "default": { "type": "boolean", "default": false },
+        "personal": { "type": "boolean", "default": false },
+        "viewType": { "enum": ["Html", "Grid", "Calendar", "Gantt", "Recurrence"], "default": "Html" },
+        "aggregations": {
+          "type": "object",
+          "additionalProperties": { "enum": ["Count", "Sum", "Avg", "Min", "Max", "Stdev", "Var"] },
+          "description": "Map of internal field name to aggregation type (Totals)."
+        }
+      }
+    },
+    "contentTypeRef": {
+      "type": "object",
+      "required": ["name"],
+      "additionalProperties": false,
+      "properties": {
+        "name": { "type": "string", "minLength": 1 },
+        "default": { "type": "boolean", "default": false },
+        "removeDefaultItem": { "type": "boolean", "default": false }
+      }
+    },
+    "settings": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "description": { "type": "string" },
+        "onQuickLaunch": { "type": "boolean", "default": true },
+        "enableContentTypes": { "type": "boolean", "default": false },
+        "enableVersioning": { "type": "boolean", "default": false },
+        "majorVersionLimit": { "type": "integer", "minimum": 1, "maximum": 50000 },
+        "enableMinorVersions": { "type": "boolean", "default": false },
+        "majorWithMinorVersionLimit": { "type": "integer", "minimum": 0, "maximum": 511 },
+        "enableModeration": { "type": "boolean", "default": false, "description": "Content approval." },
+        "enableAttachments": { "type": "boolean", "default": true },
+        "forceCheckout": { "type": "boolean", "default": false },
+        "hidden": { "type": "boolean", "default": false },
+        "noCrawl": { "type": "boolean", "default": false, "description": "Exclude from search." },
+        "irmEnabled": { "type": "boolean", "description": "Information Rights Management." },
+        "readSecurity": { "enum": [1, 2], "description": "1 = read all items, 2 = read own items only." },
+        "writeSecurity": { "enum": [1, 2, 4], "description": "1 = edit all, 2 = edit own, 4 = edit none." }
+      }
+    }
+  },
+  "properties": {
+    "$schema": { "type": "string" },
+    "title": { "type": "string", "minLength": 1, "maxLength": 255 },
+    "url": {
+      "type": "string",
+      "pattern": "^[^/\\\\]*$",
+      "description": "List URL (relative to site, no slashes). Defaults to a URL-safe version of title."
+    },
+    "templateType": {
+      "type": ["integer", "string"],
+      "description": "SPListTemplateType id (e.g. 100 = GenericList) or PnP template name ('GenericList', 'DocumentLibrary', ...).",
+      "default": 100
+    },
+    "settings": { "$ref": "#/definitions/settings" },
+    "contentTypes": {
+      "type": "array",
+      "items": { "$ref": "#/definitions/contentTypeRef" },
+      "description": "Existing (site) content types to add. Requires settings.enableContentTypes = true. leave it empty array (contentTypes: []) if not want it to be provisionied"
+    },
+    "fields": {
+      "type": "array",
+      "items": { "$ref": "#/definitions/field" }
+    },
+    "views": {
+      "type": "array",
+      "items": { "$ref": "#/definitions/view" },
+      "description": "Create views for the list, this is for now required and leave it empty array (views: []) if you dont need views to be provisionied with the list"
+    },
+    "removeExisting": {
+      "type": "boolean",
+      "default": false,
+      "description": "Delete the list first if it already exists."
+    },
+    "breakRoleInheritance": {
+      "type": "boolean",
+      "default": false,
+      "description": "Break permission inheritance (copy roles) after creation."
+    }
+  }
+}

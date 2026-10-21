@@ -1,0 +1,95 @@
+{
+  "$schema": "./sharepoint-list.schema.json",
+  "title": "Contacts",
+  "url": "Contacts",
+  "templateType": 100,
+  "removeExisting": false,
+  "breakRoleInheritance": false,
+  "settings": {
+    "description": "Contact people belonging to a customer. One customer may have many contacts. Requires the Customers list to exist first.",
+    "onQuickLaunch": true,
+    "enableContentTypes": false,
+    "enableVersioning": true,
+    "majorVersionLimit": 50,
+    "enableAttachments": false
+  },
+  "contentTypes": [],
+  "fields": [
+    {
+      "displayName": "Contact Person Name",
+      "internalName": "ContactPersonName",
+      "type": "Text",
+      "scope": "site",
+      "id": "2d0f52b2-3c84-4712-b475-12860e7006ca",
+      "group": "PnP Playground Columns",
+      "description": "Full name of the contact person. Used as the lookup display value from Products.",
+      "required": true,
+      "addToDefaultView": true,
+      "indexed": true,
+      "maxLength": 255,
+      "defaultValue": ""
+    },
+    {
+      "displayName": "Customer",
+      "internalName": "CustomerLookup",
+      "type": "Lookup",
+      "scope": "list",
+      "description": "The customer this contact person belongs to. Many contacts may point at the same customer.",
+      "required": true,
+      "addToDefaultView": true,
+      "indexed": true,
+      "lookupList": "Customers",
+      "lookupField": "CustomerName",
+      "defaultValue": ""
+    },
+    {
+      "displayName": "Email",
+      "internalName": "ContactEmail",
+      "type": "Text",
+      "scope": "site",
+      "id": "514ccbee-07a8-4283-afc9-f90e90652b8b",
+      "group": "PnP Playground Columns",
+      "description": "Work email address of the contact person.",
+      "required": false,
+      "addToDefaultView": true,
+      "maxLength": 255,
+      "defaultValue": ""
+    },
+    {
+      "displayName": "Phone Number",
+      "internalName": "ContactPhone",
+      "type": "Text",
+      "scope": "site",
+      "id": "421b30b0-8327-458c-a9af-b6a39b418557",
+      "group": "PnP Playground Columns",
+      "description": "Work phone number of the contact person, including country code.",
+      "required": false,
+      "addToDefaultView": true,
+      "maxLength": 50,
+      "defaultValue": ""
+    }
+  ],
+  "views": [
+    {
+      "name": "All Contacts",
+      "fields": ["ContactPersonName", "CustomerLookup", "ContactEmail", "ContactPhone"],
+      "query": "<OrderBy><FieldRef Name='ContactPersonName' Ascending='TRUE' /></OrderBy>",
+      "rowLimit": 50,
+      "paged": true,
+      "default": true,
+      "viewType": "Html"
+    },
+    {
+      "name": "Contacts by Customer",
+      "fields": ["CustomerLookup", "ContactPersonName", "ContactEmail", "ContactPhone"],
+      "query": "<OrderBy><FieldRef Name='CustomerLookup' Ascending='TRUE' /><FieldRef Name='ContactPersonName' Ascending='TRUE' /></OrderBy>",
+      "rowLimit": 50,
+      "paged": true,
+      "default": false,
+      "viewType": "Html",
+      "aggregations": {
+        "ContactPersonName": "Count"
+      }
+    }
+  ]
+}

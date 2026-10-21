@@ -5,6 +5,23 @@
 *.log
 transcript*.txt
 
+# Tenant connection settings - commit .env.example, never .env
+.env
+
+# Certificates - the .env templates promise these never reach git
+certs/
+*.pfx
+
+# Speaker notes stay local
+presentations/*/.demo/notes/
+presentations/*/speaker-notes.docx
+presentations/*/speaker-notes.pdf
+presentations/*/*.pptx
+
+# Demo exports - CSVs of real tenant data
+presentations/*/output/*
+!presentations/*/output/.gitkeep
+
 # OS cruft
 Thumbs.db
 desktop.ini

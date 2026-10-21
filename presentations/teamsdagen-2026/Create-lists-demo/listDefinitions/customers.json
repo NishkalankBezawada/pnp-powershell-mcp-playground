@@ -1,0 +1,86 @@
+{
+  "$schema": "./sharepoint-list.schema.json",
+  "title": "Customers",
+  "url": "Customers",
+  "templateType": 100,
+  "removeExisting": false,
+  "breakRoleInheritance": false,
+  "settings": {
+    "description": "Master list of customer organisations. Parent list for Contacts and Products.",
+    "onQuickLaunch": true,
+    "enableContentTypes": false,
+    "enableVersioning": true,
+    "majorVersionLimit": 50,
+    "enableAttachments": false
+  },
+  "contentTypes": [],
+  "fields": [
+    {
+      "displayName": "Customer Name",
+      "internalName": "CustomerName",
+      "type": "Text",
+      "scope": "site",
+      "id": "1f6f33df-c0ce-468f-a6cd-28244fcfb074",
+      "group": "PnP Playground Columns",
+      "description": "Registered name of the customer organisation. Used as the lookup display value from Contacts and Products.",
+      "required": true,
+      "addToDefaultView": true,
+      "enforceUniqueValues": true,
+      "indexed": true,
+      "maxLength": 255,
+      "defaultValue": ""
+    },
+    {
+      "displayName": "Country",
+      "internalName": "Country",
+      "type": "Taxonomy",
+      "scope": "site",
+      "id": "bb897099-358b-4a38-9037-3f19e9fea3cb",
+      "group": "PnP Playground Columns",
+      "description": "Country the customer is registered in. Bound to the managed metadata term set 'Countries'.",
+      "required": true,
+      "addToDefaultView": true,
+      "termGroup": "PnP Playground",
+      "termSetName": "Countries",
+      "openTermSet": false,
+      "defaultValue": ""
+    },
+    {
+      "displayName": "Address",
+      "internalName": "Address",
+      "type": "Note",
+      "scope": "site",
+      "id": "db7357ca-0d2b-4033-8f58-d87374a61105",
+      "group": "PnP Playground Columns",
+      "description": "Full postal address of the customer, including street, city and postal code.",
+      "required": false,
+      "addToDefaultView": true,
+      "richText": false,
+      "numberOfLines": 4,
+      "defaultValue": ""
+    }
+  ],
+  "views": [
+    {
+      "name": "All Customers",
+      "fields": ["CustomerName", "Country", "Address"],
+      "query": "<OrderBy><FieldRef Name='CustomerName' Ascending='TRUE' /></OrderBy>",
+      "rowLimit": 50,
+      "paged": true,
+      "default": true,
+      "viewType": "Html"
+    },
+    {
+      "name": "Customers by Country",
+      "fields": ["Country", "CustomerName", "Address"],
+      "query": "<OrderBy><FieldRef Name='Country' Ascending='TRUE' /><FieldRef Name='CustomerName' Ascending='TRUE' /></OrderBy>",
+      "rowLimit": 50,
+      "paged": true,
+      "default": false,
+      "viewType": "Html",
+      "aggregations": {
+        "CustomerName": "Count"
+      }
+    }
+  ]
+}

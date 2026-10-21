@@ -40,8 +40,8 @@ The full text is in `.demo/demo.json`. In short:
 | 1 | Pre-flight: check, connect to admin, `Get-PnPWeb`, connection status | — |
 | 2 | List all external users, with paging, plus a total | — |
 | 3 | Export those external users | `output/external-users.csv` |
-| 4 | Storage per site, top 10 and total | `output/site-storage.csv` |
-| 5 | Sites with exactly one owner (group owners / site collection admins) | — |
+| 4 | Top ten sites by storage, plus the tenant total | — |
+| 5 | Group-connected sites with their group owners, single-owner sites flagged | — |
 | 6 | Sites with external sharing enabled, grouped by level | — |
 
 Nothing writes to the tenant.
@@ -61,6 +61,10 @@ Get-PnPTenantSite | Sort-Object StorageUsageCurrent -Descending | Select-Object 
 ```
 
 ```powershell
+Get-PnPMicrosoft365Group -IncludeOwners | Select-Object DisplayName, SiteUrl, @{ n = 'Owners'; e = { @($_.Owners).Count } } | Sort-Object Owners
+```
+
+```powershell
 Get-PnPTenantSite | Where-Object SharingCapability -ne 'Disabled' | Group-Object SharingCapability | Select-Object Name, Count
 ```
 
@@ -74,8 +78,8 @@ Get-PnPTenantSite | Where-Object SharingCapability -ne 'Disabled' | Group-Object
 | MCP server not listed in Copilot | VS Code hasn't picked up `.vscode/mcp.json` | Reload window, check the MCP output pane |
 | 403 on `Get-PnPTenantSite` | Connected to a site, not the admin host | Reconnect to `PNP_ADMIN_SITE_URL` |
 | External user total is exactly 50 | Only the first page was read | "Keep paging until there are no more results" |
-| 403 on group owners (prompt 5) | App registration lacks Graph `Group.Read.All` | Grant it before the call, or narrow to non-group sites |
-| Prompt 5 is crawling | One connection per non-group site | Narrow live: "only sites under /sites/" |
+| 403 on group owners (prompt 5) | App registration lacks Graph `Group.Read.All` | Grant it before recording |
+| Prompt 5 connects to every site | Agent didn't find `-IncludeOwners` | "Use Get-PnPMicrosoft365Group with -IncludeOwners instead" |
 | CSV not in `output/` | MCP server's working directory isn't the workspace | Ask it to move the file, or show it where it is |
 
 ---
@@ -89,9 +93,9 @@ Target length of the finished video, after trimming the waits:
 | 1. Pre-flight | 1:00 | 1:00 |
 | 2. External users | 1:30 | 2:30 |
 | 3. External users to CSV | 0:45 | 3:15 |
-| 4. Storage per site | 1:45 | 5:00 |
-| 5. Sites with one owner | 2:00 | 7:00 |
-| 6. External sharing | 1:30 | 8:30 |
+| 4. Top ten sites by storage | 1:15 | 4:30 |
+| 5. Owners of group-connected sites | 1:15 | 5:45 |
+| 6. External sharing | 1:30 | 7:15 |
 
-The raw recording will be longer while Copilot thinks, most of all on prompt 5.
+The raw recording will be longer while Copilot thinks.
 Trim or speed up those waits in the edit.

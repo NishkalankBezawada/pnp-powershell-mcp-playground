@@ -18,7 +18,7 @@ pnp-community-call-2026/
 ├── .vscode/mcp.json   registers the MCP server for VS Code + Copilot
 ├── environment/       .env (local, gitignored) and .env.example
 ├── scripts/           DemoConnection.ps1, the manual connection fallback
-└── output/            where prompts 3 and 4 write their CSVs (gitignored)
+└── output/            where prompt 3 writes its CSV (gitignored)
 ```
 
 ## Prerequisites
@@ -40,6 +40,6 @@ start recording, and run the scenes in order, reading from `speaker-notes.docx`.
 ## The arc
 
 Prove the plumbing (pre-flight), then four governance questions an admin actually
-gets asked: who's external, where's the storage, which sites hang on one person, and
-where can outsiders get in. Nothing writes to the tenant. Two answers end up as CSVs
-on disk.
+gets asked: who's external, which sites use the most storage, who owns the group-connected
+sites (and which hang on one person), and where can outsiders get in. Nothing writes to
+the tenant. The external users end up as a CSV on disk.

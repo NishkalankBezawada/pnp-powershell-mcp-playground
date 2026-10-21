@@ -8,6 +8,7 @@
         "--yes"
       ],
       "env": {
+        "PNP_MCP_READONLY": "true",
         "PNP_MCP_CONFIRM_DESTRUCTIVE": "true",
         "PNP_MCP_COMMAND_TIMEOUT_SECONDS": "1800"
       }

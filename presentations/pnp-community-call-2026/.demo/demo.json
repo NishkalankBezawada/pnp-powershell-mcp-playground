@@ -1,7 +1,7 @@
 {
   "$schema": "https://demotime.show/demo-time.schema.json",
   "title": "Introduction to PnP PowerShell MCP Server",
-  "description": "Copilot, Microsoft 365 & Power Platform community call, 22 October 2026. Recorded demo, played from the slides: six plain-English prompts against a real tenant, from the pre-flight check to a tenant governance report exported to CSV. Every prompt is read-only against the tenant.",
+  "description": "Copilot, Microsoft 365 & Power Platform community call, 22 October 2026. Recorded demo, played from the slides: six plain-English prompts against a real tenant, from the pre-flight check to a tenant governance report, with the external users exported to CSV. Every prompt is read-only against the tenant.",
   "version": 3,
   "scenes": [
     {
@@ -23,7 +23,7 @@
       "moves": [
         {
           "action": "agentCopilotChat",
-          "message": "Using the PnP PowerShell MCP server and the tenant admin connection from the pre-flight, find and list all the external users in the tenant. Search for the right cmdlet first rather than assuming one, and page through all of the results rather than stopping at the first page. Show me the login name, display name and the date they were invited, and tell me how many there are in total. This step is read-only. Do not change anything."
+          "message": "Using the PnP PowerShell MCP server and the tenant admin connection from the pre-flight, find and list all the external users in the tenant. Search for the right cmdlet first rather than assuming one, and page through all of the results rather than stopping at the first page. Show me the UPN, display name and the date they were invited, and tell me how many there are in total. This step is read-only. Do not change anything."
         }
       ],
       "notes": {
@@ -36,7 +36,7 @@
       "moves": [
         {
           "action": "agentCopilotChat",
-          "message": "Now export all of those external users to a CSV file at output/external-users.csv in this workspace. Reuse the results from the previous step if you still have them, otherwise fetch them again the same way. Include the columns you showed me, plus who invited them and the account they accepted as, where that is available. Write UTF-8 without a type information header and overwrite the file if it already exists. Then tell me the full path and how many rows you wrote. Nothing in the tenant should change."
+          "message": "Now export all of those external users to a CSV file at output/external-users.csv in this workspace. Reuse the results from the previous step if you still have them, otherwise fetch them again the same way. Include the columns you showed me (UPN, display name, and the date they were invited). Write UTF-8 without a type information header and overwrite the file if it already exists. Then tell me the full path and how many rows you wrote. Nothing in the tenant should change."
         }
       ],
       "notes": {
@@ -44,12 +44,12 @@
       }
     },
     {
-      "title": "4. Storage usage per site, exported to CSV",
-      "description": "Read-only tenant-wide report. Writes output/site-storage.csv locally.",
+      "title": "4. Top ten sites by storage",
+      "description": "Read-only tenant-wide report. The ten site collections using the most storage, plus the tenant total.",
       "moves": [
         {
           "action": "agentCopilotChat",
-          "message": "Using the same tenant admin connection, get the storage used by every site collection in the tenant. Search for the right cmdlet first rather than assuming one, and leave out OneDrive sites. For each site include the URL, title, template, storage used in MB, storage quota in MB and the percentage of the quota used. Export the full list, sorted by storage used with the largest first, to output/site-storage.csv in this workspace. Then show me the top 10 here, the total storage used across all sites, and the full path of the CSV. This step is read-only. Do not change anything in the tenant."
+          "message": "Using the same tenant admin connection, find the ten site collections in the tenant that use the most storage. Search for the right cmdlet first rather than assuming one, and leave out OneDrive sites. For each of the ten sites, show the URL, title, template, storage used in MB, storage quota in MB, and the percentage of the quota used, sorted by storage used with the largest first. Then tell me the total storage used across all sites in the tenant. This step is read-only. Do not change anything in the tenant."
         }
       ],
       "notes": {
@@ -57,12 +57,12 @@
       }
     },
     {
-      "title": "5. Find sites with only one owner",
-      "description": "Read-only tenant-wide report. Group owners for group-connected sites, site collection admins for the rest.",
+      "title": "5. Owners of group-connected sites",
+      "description": "Read-only tenant-wide report. Every Microsoft 365 group-connected site with its group owners, single-owner sites flagged.",
       "moves": [
         {
           "action": "agentCopilotChat",
-          "message": "Find every site collection in the tenant that has exactly one owner, because a site with a single owner is a single point of failure. Count owners like this: for a site connected to a Microsoft 365 group, count the owners of that group; for every other site, count the site collection administrators. Search for the right cmdlets first rather than assuming them. Leave out OneDrive sites and system sites such as the search center and the app catalog. If a cmdlet needs a connection to the site itself, connect to that site with the same credentials and return to the tenant admin connection when you are done. Show me the URL, the title, whether the site is group-connected and who the single owner is, and tell me how many there are in total. This step is read-only. Do not change anything."
+          "message": "Using the same tenant admin connection, list every site collection in the tenant that is connected to a Microsoft 365 group, together with the owners of that group. Search for the right cmdlets first rather than assuming them, and leave out OneDrive sites. For each site, show the URL, the title, the group name, and the owners' display names. Mark the sites whose group has only one owner, and tell me how many group-connected sites there are in total and how many have a single owner. This step is read-only. Do not change anything."
         }
       ],
       "notes": {

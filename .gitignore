@@ -14,8 +14,8 @@ certs/
 
 # Speaker notes stay local
 presentations/*/.demo/notes/
-presentations/*/speaker-notes.docx
-presentations/*/speaker-notes.pdf
+presentations/*/speaker-notes*.docx
+presentations/*/speaker-notes*.pdf
 presentations/*/*.pptx
 
 # Demo exports - CSVs of real tenant data

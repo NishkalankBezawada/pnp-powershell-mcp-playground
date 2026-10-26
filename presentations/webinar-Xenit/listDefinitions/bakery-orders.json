@@ -1,0 +1,119 @@
+{
+  "$schema": "./sharepoint-list.schema.json",
+  "title": "Bakery Orders",
+  "url": "BakeryOrders",
+  "templateType": 100,
+  "removeExisting": false,
+  "breakRoleInheritance": false,
+  "settings": {
+    "description": "Orders from cafés, offices and restaurants. One item per product ordered. The Title column holds the order number, e.g. ORD-1001. Requires the Bakery Products list to exist first.",
+    "onQuickLaunch": true,
+    "enableContentTypes": false,
+    "enableVersioning": true,
+    "majorVersionLimit": 50,
+    "enableAttachments": false
+  },
+  "contentTypes": [],
+  "fields": [
+    {
+      "displayName": "Customer",
+      "internalName": "CustomerName",
+      "type": "Text",
+      "scope": "list",
+      "description": "Name of the café, office or restaurant that placed the order.",
+      "required": true,
+      "addToDefaultView": true,
+      "indexed": true,
+      "maxLength": 255,
+      "defaultValue": ""
+    },
+    {
+      "displayName": "Product",
+      "internalName": "ProductLookup",
+      "type": "Lookup",
+      "scope": "list",
+      "description": "The product ordered, from the Bakery Products list.",
+      "required": true,
+      "addToDefaultView": true,
+      "indexed": true,
+      "lookupList": "Bakery Products",
+      "lookupField": "Title",
+      "defaultValue": ""
+    },
+    {
+      "displayName": "Quantity",
+      "internalName": "Quantity",
+      "type": "Number",
+      "scope": "list",
+      "description": "Number of pieces ordered.",
+      "required": true,
+      "addToDefaultView": true,
+      "decimalPlaces": 0,
+      "minimumValue": 1,
+      "defaultValue": 1
+    },
+    {
+      "displayName": "Delivery Date",
+      "internalName": "DeliveryDate",
+      "type": "DateTime",
+      "scope": "list",
+      "description": "Day the order is delivered.",
+      "required": true,
+      "addToDefaultView": true,
+      "indexed": true,
+      "dateFormat": "DateOnly",
+      "defaultValue": "[today]"
+    },
+    {
+      "displayName": "Bakery",
+      "internalName": "Bakery",
+      "type": "Taxonomy",
+      "scope": "site",
+      "id": "4e951ae8-b486-42f9-b40f-251048110252",
+      "group": "Swedish Bakery Columns",
+      "description": "The bakery that bakes and delivers the order. Bound to the managed metadata term set 'Bakery Locations' (Stockholm Södermalm, Stockholm Vasastan, Göteborg Haga, Malmö Möllevången, Uppsala Centrum).",
+      "required": true,
+      "addToDefaultView": true,
+      "termGroup": "Swedish Bakery",
+      "termSetName": "Bakery Locations",
+      "openTermSet": false,
+      "defaultValue": ""
+    },
+    {
+      "displayName": "Order Status",
+      "internalName": "OrderStatus",
+      "type": "Choice",
+      "scope": "list",
+      "description": "Where the order is right now.",
+      "required": true,
+      "addToDefaultView": true,
+      "choices": ["New", "Baking", "Out for delivery", "Delivered", "Cancelled"],
+      "choiceFormat": "Dropdown",
+      "fillInChoice": false,
+      "defaultValue": "New"
+    }
+  ],
+  "views": [
+    {
+      "name": "All Orders",
+      "fields": ["LinkTitle", "CustomerName", "ProductLookup", "Quantity", "DeliveryDate", "Bakery", "OrderStatus"],
+      "query": "<OrderBy><FieldRef Name='DeliveryDate' Ascending='FALSE' /></OrderBy>",
+      "rowLimit": 50,
+      "paged": true,
+      "default": true,
+      "viewType": "Html"
+    },
+    {
+      "name": "Today's Deliveries",
+      "fields": ["Bakery", "CustomerName", "ProductLookup", "Quantity", "OrderStatus"],
+      "query": "<Where><Eq><FieldRef Name='DeliveryDate' /><Value Type='DateTime'><Today /></Value></Eq></Where><OrderBy><FieldRef Name='CustomerName' Ascending='TRUE' /></OrderBy>",
+      "rowLimit": 100,
+      "paged": true,
+      "default": false,
+      "viewType": "Html",
+      "aggregations": {
+        "Quantity": "Sum"
+      }
+    }
+  ]
+}

@@ -1,0 +1,119 @@
+{
+  "$schema": "./sharepoint-list.schema.json",
+  "title": "Karak Café Orders",
+  "url": "KarakCafeOrders",
+  "templateType": 100,
+  "removeExisting": false,
+  "breakRoleInheritance": false,
+  "settings": {
+    "description": "Orders from offices, events and meeting rooms. One item per menu item ordered. The Title column holds the order number, e.g. ORD-1001. Requires the Karak Café Menu list to exist first.",
+    "onQuickLaunch": true,
+    "enableContentTypes": false,
+    "enableVersioning": true,
+    "majorVersionLimit": 50,
+    "enableAttachments": false
+  },
+  "contentTypes": [],
+  "fields": [
+    {
+      "displayName": "Customer",
+      "internalName": "CustomerName",
+      "type": "Text",
+      "scope": "list",
+      "description": "Name of the office, event or team that placed the order.",
+      "required": true,
+      "addToDefaultView": true,
+      "indexed": true,
+      "maxLength": 255,
+      "defaultValue": ""
+    },
+    {
+      "displayName": "Menu Item",
+      "internalName": "MenuItemLookup",
+      "type": "Lookup",
+      "scope": "list",
+      "description": "The menu item ordered, from the Karak Café Menu list.",
+      "required": true,
+      "addToDefaultView": true,
+      "indexed": true,
+      "lookupList": "Karak Café Menu",
+      "lookupField": "Title",
+      "defaultValue": ""
+    },
+    {
+      "displayName": "Quantity",
+      "internalName": "Quantity",
+      "type": "Number",
+      "scope": "list",
+      "description": "Number of items ordered.",
+      "required": true,
+      "addToDefaultView": true,
+      "decimalPlaces": 0,
+      "minimumValue": 1,
+      "defaultValue": 1
+    },
+    {
+      "displayName": "Delivery Date",
+      "internalName": "DeliveryDate",
+      "type": "DateTime",
+      "scope": "list",
+      "description": "Day the order is delivered.",
+      "required": true,
+      "addToDefaultView": true,
+      "indexed": true,
+      "dateFormat": "DateOnly",
+      "defaultValue": "[today]"
+    },
+    {
+      "displayName": "Café Location",
+      "internalName": "CafeLocation",
+      "type": "Taxonomy",
+      "scope": "site",
+      "id": "a52119ea-d97e-436f-9f6e-0475a3c2457c",
+      "group": "Karak Café Columns",
+      "description": "The café that prepares and delivers the order. Bound to the managed metadata term set 'Café Locations' (Sharjah - SPARK, Sharjah - Al Majaz, Dubai - Marina, Dubai - DIFC, Abu Dhabi - Corniche).",
+      "required": true,
+      "addToDefaultView": true,
+      "termGroup": "Karak Café",
+      "termSetName": "Café Locations",
+      "openTermSet": false,
+      "defaultValue": ""
+    },
+    {
+      "displayName": "Order Status",
+      "internalName": "OrderStatus",
+      "type": "Choice",
+      "scope": "list",
+      "description": "Where the order is right now.",
+      "required": true,
+      "addToDefaultView": true,
+      "choices": ["New", "Brewing", "Out for delivery", "Delivered", "Cancelled"],
+      "choiceFormat": "Dropdown",
+      "fillInChoice": false,
+      "defaultValue": "New"
+    }
+  ],
+  "views": [
+    {
+      "name": "All Orders",
+      "fields": ["LinkTitle", "CustomerName", "MenuItemLookup", "Quantity", "DeliveryDate", "CafeLocation", "OrderStatus"],
+      "query": "<OrderBy><FieldRef Name='DeliveryDate' Ascending='FALSE' /></OrderBy>",
+      "rowLimit": 50,
+      "paged": true,
+      "default": true,
+      "viewType": "Html"
+    },
+    {
+      "name": "Today's Deliveries",
+      "fields": ["CafeLocation", "CustomerName", "MenuItemLookup", "Quantity", "OrderStatus"],
+      "query": "<Where><Eq><FieldRef Name='DeliveryDate' /><Value Type='DateTime'><Today /></Value></Eq></Where><OrderBy><FieldRef Name='CustomerName' Ascending='TRUE' /></OrderBy>",
+      "rowLimit": 100,
+      "paged": true,
+      "default": false,
+      "viewType": "Html",
+      "aggregations": {
+        "Quantity": "Sum"
+      }
+    }
+  ]
+}

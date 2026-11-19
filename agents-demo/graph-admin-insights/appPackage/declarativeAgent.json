@@ -1,0 +1,31 @@
+{
+    "$schema": "https://developer.microsoft.com/json-schemas/copilot/declarative-agent/v1.9/schema.json",
+    "version": "v1.9",
+    "name": "Graph Admin Insights${{APP_NAME_SUFFIX}}",
+    "description": "Read-only tenant reporting for Microsoft 365 and Entra admins, powered by the Microsoft MCP Server for Enterprise",
+    "instructions": "$[file('instruction.txt')]",
+    "conversation_starters": [
+        {
+			"title": "Count users",
+			"text": "How many users are in my tenant, and how many of them are guests?"
+		},
+        {
+			"title": "Licence overview",
+			"text": "Which licences does my tenant have and how many seats are assigned?"
+		},
+        {
+			"title": "Admin roles",
+			"text": "Who holds the Global Administrator role?"
+		},
+        {
+			"title": "Conditional Access",
+			"text": "List my Conditional Access policies and whether each one is enabled."
+		}
+    ],
+    "actions": [
+        {
+            "id": "action_1",
+            "file": "ai-plugin.json"
+        }
+    ]
+}

@@ -1,0 +1,118 @@
+{
+  "$schema": "./sharepoint-list.schema.json",
+  "title": "Karak Café Menu",
+  "url": "KarakCafeMenu",
+  "templateType": 100,
+  "removeExisting": false,
+  "breakRoleInheritance": false,
+  "settings": {
+    "description": "Menu of the Karak café: karak and tea, Arabic coffee, specialty coffee, sweets and savouries. The Title column holds the item name, e.g. Karak Chai. Parent list for Karak Café Orders.",
+    "onQuickLaunch": true,
+    "enableContentTypes": false,
+    "enableVersioning": true,
+    "majorVersionLimit": 50,
+    "enableAttachments": false
+  },
+  "contentTypes": [],
+  "fields": [
+    {
+      "displayName": "Item Code",
+      "internalName": "ItemCode",
+      "type": "Text",
+      "scope": "list",
+      "description": "Unique code of the menu item, e.g. KRK-001.",
+      "required": true,
+      "addToDefaultView": true,
+      "enforceUniqueValues": true,
+      "indexed": true,
+      "maxLength": 20,
+      "defaultValue": ""
+    },
+    {
+      "displayName": "Menu Category",
+      "internalName": "MenuCategory",
+      "type": "Taxonomy",
+      "scope": "site",
+      "id": "5a301b52-cba1-4666-9431-6d9c14ec399a",
+      "group": "Karak Café Columns",
+      "description": "Category of the menu item. Bound to the managed metadata term set 'Menu Categories' (Karak & Tea, Arabic Coffee, Specialty Coffee, Sweets, Savouries).",
+      "required": true,
+      "addToDefaultView": true,
+      "termGroup": "Karak Café",
+      "termSetName": "Menu Categories",
+      "openTermSet": false,
+      "defaultValue": ""
+    },
+    {
+      "displayName": "Allergens",
+      "internalName": "CafeAllergens",
+      "type": "TaxonomyMulti",
+      "scope": "site",
+      "id": "d8864eaa-fa0f-42c3-94b5-24a89d7454b4",
+      "group": "Karak Café Columns",
+      "description": "Allergens in the menu item. Bound to the managed metadata term set 'Allergens' (Gluten, Milk, Egg, Nuts, Sesame, Soy).",
+      "required": false,
+      "addToDefaultView": true,
+      "termGroup": "Karak Café",
+      "termSetName": "Allergens",
+      "openTermSet": false,
+      "defaultValue": ""
+    },
+    {
+      "displayName": "Price (AED)",
+      "internalName": "PriceAED",
+      "type": "Currency",
+      "scope": "list",
+      "description": "Price per item in UAE dirham.",
+      "required": true,
+      "addToDefaultView": true,
+      "currencyCode": 14337,
+      "decimalPlaces": 2,
+      "minimumValue": 0,
+      "defaultValue": ""
+    },
+    {
+      "displayName": "Prep Time (minutes)",
+      "internalName": "PrepTimeMinutes",
+      "type": "Number",
+      "scope": "list",
+      "description": "How many minutes the item takes to prepare.",
+      "required": false,
+      "addToDefaultView": false,
+      "decimalPlaces": 0,
+      "minimumValue": 1,
+      "maximumValue": 30,
+      "defaultValue": 3
+    },
+    {
+      "displayName": "Ramadan Special",
+      "internalName": "IsRamadanSpecial",
+      "type": "Boolean",
+      "scope": "list",
+      "description": "Yes for items served only during Ramadan, e.g. Qatayef or Vimto.",
+      "required": false,
+      "addToDefaultView": true,
+      "defaultValue": false
+    }
+  ],
+  "views": [
+    {
+      "name": "All Menu Items",
+      "fields": ["LinkTitle", "ItemCode", "MenuCategory", "PriceAED", "CafeAllergens", "IsRamadanSpecial"],
+      "query": "<OrderBy><FieldRef Name='Title' Ascending='TRUE' /></OrderBy>",
+      "rowLimit": 50,
+      "paged": true,
+      "default": true,
+      "viewType": "Html"
+    },
+    {
+      "name": "Ramadan Specials",
+      "fields": ["LinkTitle", "ItemCode", "MenuCategory", "PriceAED", "PrepTimeMinutes"],
+      "query": "<Where><Eq><FieldRef Name='IsRamadanSpecial' /><Value Type='Boolean'>1</Value></Eq></Where><OrderBy><FieldRef Name='Title' Ascending='TRUE' /></OrderBy>",
+      "rowLimit": 50,
+      "paged": true,
+      "default": false,
+      "viewType": "Html"
+    }
+  ]
+}

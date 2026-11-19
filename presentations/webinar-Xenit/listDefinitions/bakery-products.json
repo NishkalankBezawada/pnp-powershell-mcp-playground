@@ -1,0 +1,118 @@
+{
+  "$schema": "./sharepoint-list.schema.json",
+  "title": "Bakery Products",
+  "url": "BakeryProducts",
+  "templateType": 100,
+  "removeExisting": false,
+  "breakRoleInheritance": false,
+  "settings": {
+    "description": "Product catalogue of the bakery: buns, bread, cakes and cookies. The Title column holds the product name, e.g. Kanelbulle. Parent list for Bakery Orders.",
+    "onQuickLaunch": true,
+    "enableContentTypes": false,
+    "enableVersioning": true,
+    "majorVersionLimit": 50,
+    "enableAttachments": false
+  },
+  "contentTypes": [],
+  "fields": [
+    {
+      "displayName": "Article Number",
+      "internalName": "ArticleNumber",
+      "type": "Text",
+      "scope": "list",
+      "description": "Unique article number of the product, e.g. BUL-001.",
+      "required": true,
+      "addToDefaultView": true,
+      "enforceUniqueValues": true,
+      "indexed": true,
+      "maxLength": 20,
+      "defaultValue": ""
+    },
+    {
+      "displayName": "Product Category",
+      "internalName": "ProductCategory",
+      "type": "Taxonomy",
+      "scope": "site",
+      "id": "86d512ec-06e8-49f5-bd56-104be8c7a865",
+      "group": "Swedish Bakery Columns",
+      "description": "Category of the product. Bound to the managed metadata term set 'Product Categories' (Buns, Bread, Cakes, Cookies, Seasonal).",
+      "required": true,
+      "addToDefaultView": true,
+      "termGroup": "Swedish Bakery",
+      "termSetName": "Product Categories",
+      "openTermSet": false,
+      "defaultValue": ""
+    },
+    {
+      "displayName": "Allergens",
+      "internalName": "Allergens",
+      "type": "TaxonomyMulti",
+      "scope": "site",
+      "id": "e00a9495-3b3a-4f20-91cb-9039a2d76431",
+      "group": "Swedish Bakery Columns",
+      "description": "Allergens in the product. Bound to the managed metadata term set 'Allergens' (Gluten, Milk, Egg, Nuts, Almonds, Sesame, Soy).",
+      "required": false,
+      "addToDefaultView": true,
+      "termGroup": "Swedish Bakery",
+      "termSetName": "Allergens",
+      "openTermSet": false,
+      "defaultValue": ""
+    },
+    {
+      "displayName": "Price (SEK)",
+      "internalName": "PriceSEK",
+      "type": "Currency",
+      "scope": "list",
+      "description": "Price per piece in Swedish kronor.",
+      "required": true,
+      "addToDefaultView": true,
+      "currencyCode": 1053,
+      "decimalPlaces": 2,
+      "minimumValue": 0,
+      "defaultValue": ""
+    },
+    {
+      "displayName": "Shelf Life (days)",
+      "internalName": "ShelfLifeDays",
+      "type": "Number",
+      "scope": "list",
+      "description": "How many days the product stays fresh after baking.",
+      "required": false,
+      "addToDefaultView": false,
+      "decimalPlaces": 0,
+      "minimumValue": 1,
+      "maximumValue": 30,
+      "defaultValue": 1
+    },
+    {
+      "displayName": "Seasonal",
+      "internalName": "IsSeasonal",
+      "type": "Boolean",
+      "scope": "list",
+      "description": "Yes for products sold only part of the year, e.g. Semla or Lussekatt.",
+      "required": false,
+      "addToDefaultView": true,
+      "defaultValue": false
+    }
+  ],
+  "views": [
+    {
+      "name": "All Products",
+      "fields": ["LinkTitle", "ArticleNumber", "ProductCategory", "PriceSEK", "Allergens", "IsSeasonal"],
+      "query": "<OrderBy><FieldRef Name='Title' Ascending='TRUE' /></OrderBy>",
+      "rowLimit": 50,
+      "paged": true,
+      "default": true,
+      "viewType": "Html"
+    },
+    {
+      "name": "Seasonal Products",
+      "fields": ["LinkTitle", "ArticleNumber", "ProductCategory", "PriceSEK", "ShelfLifeDays"],
+      "query": "<Where><Eq><FieldRef Name='IsSeasonal' /><Value Type='Boolean'>1</Value></Eq></Where><OrderBy><FieldRef Name='Title' Ascending='TRUE' /></OrderBy>",
+      "rowLimit": 50,
+      "paged": true,
+      "default": false,
+      "viewType": "Html"
+    }
+  ]
+}
